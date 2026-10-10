@@ -43,10 +43,12 @@ const Pricing: React.FC<PricingProps> = ({ onBookNow }) => {
 
   // Budget Calculator State
   // EA rate: $40/hr, Bookkeeper rate: $55/hr
-  // Budget starts at $1,000/month
+  // Budget starts at $1,000/month minimum
+  // $250 onboarding fee is added on top of the min $1,000 (starts at $1,250 total)
   const [eaHoursPerWeek, setEaHoursPerWeek] = useState<number>(5);
   const [bkHoursPerWeek, setBkHoursPerWeek] = useState<number>(2);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [viewMode, setViewMode] = useState<'first_month' | 'monthly'>('first_month');
 
   // Calculate monthly costs (4.33 weeks per month on average)
   const eaMonthlyCost = useMemo(() => Math.round(eaHoursPerWeek * 40 * 4.33), [eaHoursPerWeek]);
@@ -55,6 +57,7 @@ const Pricing: React.FC<PricingProps> = ({ onBookNow }) => {
   
   // Budget starts at $1,000 a month minimum
   const effectiveMonthlyBudget = useMemo(() => Math.max(1000, rawTotalCost), [rawTotalCost]);
+  const onboardingFee = 250;
 
   const [displayCost, setDisplayCost] = useState<number>(effectiveMonthlyBudget);
 
@@ -151,12 +154,12 @@ const Pricing: React.FC<PricingProps> = ({ onBookNow }) => {
                   <div className="text-[10px] text-gray-400 uppercase font-semibold tracking-wider">One-Time Onboarding</div>
                 </div>
                 <div>
-                  <div className="text-xl font-black text-white logo-font">$1,000/mo</div>
+                  <div className="text-xl font-black text-white logo-font">$1,000<span className="text-xs font-normal text-gray-400">/mo</span></div>
                   <div className="text-[10px] text-gray-400 uppercase font-semibold tracking-wider">Starting Budget</div>
                 </div>
                 <div>
-                  <div className="text-xl font-black text-white logo-font">100% US</div>
-                  <div className="text-[10px] text-gray-400 uppercase font-semibold tracking-wider">Based Talent</div>
+                  <div className="text-xl font-black text-[#ab7e31] logo-font">$1,250</div>
+                  <div className="text-[10px] text-gray-400 uppercase font-semibold tracking-wider">Total to Start</div>
                 </div>
               </div>
             </div>
@@ -476,8 +479,8 @@ const Pricing: React.FC<PricingProps> = ({ onBookNow }) => {
               <h2 className="text-3xl sm:text-5xl logo-font font-black text-white">
                 Monthly Budget <span className="text-[#ab7e31] italic font-light">Calculator</span>
               </h2>
-              <p className="text-gray-400 font-light max-w-xl mx-auto text-sm sm:text-base">
-                Your monthly budget begins at <span className="text-white font-bold">$1,000/month</span>. Allocate your hours across Executive Assistants ($40/hr) and Bookkeepers ($55/hr) in any combination.
+              <p className="text-gray-400 font-light max-w-2xl mx-auto text-sm sm:text-base">
+                Your investment starts at <span className="text-white font-bold">$1,250</span> ($250 one-time onboarding fee added on top of your $1,000 minimum monthly talent budget). Allocate your hours across Executive Assistants ($40/hr) and Bookkeepers ($55/hr) in any combination that fits your priorities.
               </p>
             </div>
 
@@ -489,21 +492,21 @@ const Pricing: React.FC<PricingProps> = ({ onBookNow }) => {
                 onClick={() => { setEaHoursPerWeek(6); setBkHoursPerWeek(0); }}
                 className="px-4 py-2 rounded-xl bg-white/5 hover:bg-[#ab7e31]/20 border border-white/10 hover:border-[#ab7e31]/50 text-xs font-semibold text-gray-300 hover:text-white transition-all"
               >
-                $1,000 Starter (EA Focus)
+                $1,250 Starter ($1,000 + $250 Onboarding)
               </button>
               <button
                 type="button"
                 onClick={() => { setEaHoursPerWeek(5); setBkHoursPerWeek(2); }}
                 className="px-4 py-2 rounded-xl bg-white/5 hover:bg-[#ab7e31]/20 border border-white/10 hover:border-[#ab7e31]/50 text-xs font-semibold text-gray-300 hover:text-white transition-all"
               >
-                $1,340 Balanced (EA + BK)
+                $1,590 Balanced ($1,340 + $250 Onboarding)
               </button>
               <button
                 type="button"
                 onClick={() => { setEaHoursPerWeek(10); setBkHoursPerWeek(4); }}
                 className="px-4 py-2 rounded-xl bg-white/5 hover:bg-[#ab7e31]/20 border border-white/10 hover:border-[#ab7e31]/50 text-xs font-semibold text-gray-300 hover:text-white transition-all"
               >
-                $2,680 Growth Scale
+                $2,930 Growth Scale ($2,680 + $250 Onboarding)
               </button>
             </div>
 
@@ -597,7 +600,7 @@ const Pricing: React.FC<PricingProps> = ({ onBookNow }) => {
                   <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 text-xs text-gray-400 font-light flex items-center space-x-3">
                     <i className="fas fa-info-circle text-[#ab7e31] text-sm shrink-0"></i>
                     <span>
-                      Black Star VA budgets start at <strong className="text-white">$1,000/mo</strong>. If your calculated workload is below $1,000, our base retainer guarantees dedicated priority capacity.
+                      Get started for <strong className="text-white">$1,250</strong> ($250 one-time onboarding fee added on top of the $1,000 min monthly budget). After month 1, your engagement continues on your flexible monthly budget beginning at $1,000/mo.
                     </span>
                   </div>
 
@@ -608,41 +611,87 @@ const Pricing: React.FC<PricingProps> = ({ onBookNow }) => {
                   <div className={`bg-gradient-to-b from-[#ab7e31]/15 via-black to-black p-8 sm:p-10 rounded-[2.5rem] border border-[#ab7e31]/30 text-center flex flex-col justify-between relative transition-all duration-300 shadow-2xl ${isUpdating ? 'scale-[1.02] border-[#ab7e31]' : 'scale-100'}`}>
                     
                     <div>
+                      {/* View Switcher: First Month vs Ongoing */}
+                      <div className="flex justify-center mb-5">
+                        <div className="inline-flex p-1 rounded-xl bg-black/70 border border-white/10 shadow-inner">
+                          <button
+                            type="button"
+                            onClick={() => setViewMode('first_month')}
+                            className={`px-3.5 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all ${
+                              viewMode === 'first_month'
+                                ? 'bg-[#ab7e31] text-black shadow-md'
+                                : 'text-gray-400 hover:text-white'
+                            }`}
+                          >
+                            First Month Total
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setViewMode('monthly')}
+                            className={`px-3.5 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all ${
+                              viewMode === 'monthly'
+                                ? 'bg-[#ab7e31] text-black shadow-md'
+                                : 'text-gray-400 hover:text-white'
+                            }`}
+                          >
+                            Monthly Retainer
+                          </button>
+                        </div>
+                      </div>
+
                       <span className="text-[#ab7e31] text-[10px] font-black uppercase tracking-[0.35em] mb-2 block">
-                        Estimated Monthly Investment
+                        {viewMode === 'first_month' ? 'Total Initial Investment' : 'Estimated Monthly Retainer'}
                       </span>
 
                       <div className="my-5">
                         <span className="text-2xl text-[#ab7e31] font-bold align-top mr-1">$</span>
                         <span className={`text-6xl sm:text-7xl logo-font font-black tracking-tight transition-colors duration-300 ${isUpdating ? 'text-[#ab7e31]' : 'text-white'}`}>
-                          {displayCost.toLocaleString()}
+                          {viewMode === 'first_month'
+                            ? (displayCost + onboardingFee).toLocaleString()
+                            : displayCost.toLocaleString()}
                         </span>
-                        <span className="text-gray-400 text-xs font-bold uppercase block mt-1">/ month flexible budget</span>
+                        <span className="text-gray-400 text-xs font-bold uppercase block mt-1">
+                          {viewMode === 'first_month'
+                            ? 'Total to get started (Month 1)'
+                            : '/ month flexible budget (Month 2+)'}
+                        </span>
                       </div>
 
-                      {rawTotalCost < 1000 && (
-                        <div className="inline-block px-3 py-1 rounded-full bg-[#ab7e31]/20 border border-[#ab7e31]/40 text-[#ab7e31] text-[10px] font-black uppercase tracking-wider mb-4">
-                          Minimum Monthly Retainer Applied ($1,000)
-                        </div>
-                      )}
+                      <div className="inline-block px-3 py-1 rounded-full bg-[#ab7e31]/20 border border-[#ab7e31]/40 text-[#ab7e31] text-[10px] font-black uppercase tracking-wider mb-4">
+                        {viewMode === 'first_month'
+                          ? '$250 Onboarding Fee Added On Top of $1,000 Min.'
+                          : (rawTotalCost < 1000 ? 'Minimum Monthly Retainer Applied ($1,000)' : 'Active Flexible Budget')}
+                      </div>
 
                       {/* Line-item summary */}
                       <div className="space-y-3 py-4 border-y border-white/10 text-xs text-left mb-6">
                         <div className="flex justify-between text-gray-300">
-                          <span>One-Time Onboarding:</span>
-                          <span className="text-[#ab7e31] font-bold">$250</span>
+                          <span>One-Time Onboarding Fee:</span>
+                          <span className="text-[#ab7e31] font-bold">+$250</span>
                         </div>
                         <div className="flex justify-between text-gray-300">
-                          <span>EA Support ({eaHoursPerWeek} hrs/wk):</span>
-                          <span className="font-semibold text-white">${eaMonthlyCost.toLocaleString()}/mo</span>
+                          <span>Monthly Talent Budget (Min. $1,000):</span>
+                          <span className="font-semibold text-white">${displayCost.toLocaleString()}/mo</span>
                         </div>
-                        <div className="flex justify-between text-gray-300">
-                          <span>Bookkeeping ({bkHoursPerWeek} hrs/wk):</span>
-                          <span className="font-semibold text-white">${bkMonthlyCost.toLocaleString()}/mo</span>
+                        <div className="flex justify-between text-gray-400 pl-3">
+                          <span>↳ EA Support ({eaHoursPerWeek} hrs/wk @ $40):</span>
+                          <span>${eaMonthlyCost.toLocaleString()}/mo</span>
                         </div>
-                        <div className="flex justify-between text-gray-300 pt-2 border-t border-white/5 font-semibold">
-                          <span>Total Monthly Hours:</span>
+                        <div className="flex justify-between text-gray-400 pl-3">
+                          <span>↳ Bookkeeping ({bkHoursPerWeek} hrs/wk @ $55):</span>
+                          <span>${bkMonthlyCost.toLocaleString()}/mo</span>
+                        </div>
+                        <div className="flex justify-between text-gray-300 pt-1 border-t border-white/5 font-medium">
+                          <span>Total Monthly Talent Hours:</span>
                           <span className="text-[#ab7e31]">~{Math.round((eaHoursPerWeek + bkHoursPerWeek) * 4.33)} hours</span>
+                        </div>
+                        <div className="flex justify-between text-white pt-2.5 border-t border-white/10 font-bold">
+                          <span>Total Month 1 (250 added on top):</span>
+                          <span className="text-[#ab7e31] text-sm font-black">${(displayCost + onboardingFee).toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between text-gray-400 text-[11px]">
+                          <span>Month 2+ Ongoing Monthly:</span>
+                          <span className="text-gray-200 font-semibold">${displayCost.toLocaleString()}/mo</span>
                         </div>
                       </div>
                     </div>

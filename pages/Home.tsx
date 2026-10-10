@@ -122,6 +122,13 @@ const Home: React.FC<HomeProps> = ({ onBookNow }) => {
       </section>
 
       <div className="py-12 border-y border-white/5 bg-black/40 relative z-20 backdrop-blur-sm">
+        <div className="text-center mb-5">
+          <span className="text-[#ab7e31] font-black uppercase text-[11px] tracking-[0.45em] inline-flex items-center space-x-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#ab7e31] animate-pulse"></span>
+            <span>We support</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#ab7e31] animate-pulse"></span>
+          </span>
+        </div>
         <div className="max-w-7xl mx-auto px-4 flex flex-wrap justify-center gap-12 md:gap-24 grayscale opacity-30 hover:grayscale-0 hover:opacity-100 transition-all duration-700 overflow-hidden whitespace-nowrap group">
            {['FOUNDER', 'CEO', 'PARTNER', 'INVESTOR', 'BUSINESS OWNER'].map((title, idx) => (
              <div key={idx} className="text-2xl md:text-3xl font-black logo-font text-white tracking-[0.3em] flex items-center group-hover:scale-105 transition-transform">
