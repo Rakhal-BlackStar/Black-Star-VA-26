@@ -1,0 +1,9 @@
+{
+  "name": "Blackstar VA - Elite Virtual Assistant Services",
+  "description": "A high-end, professional virtual assistant agency website featuring pricing calculators, a client portal, and an AI-powered support chatbot.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": []
+}
